@@ -16,9 +16,9 @@
 
 package com.myfirstcomposeapp.ui.home
 
-import android.content.res.Resources
 import androidx.compose.Composable
 import androidx.compose.unaryPlus
+import androidx.ui.core.Clip
 import androidx.ui.core.Opacity
 import androidx.ui.core.Text
 import androidx.ui.core.dp
@@ -26,34 +26,29 @@ import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.DrawImage
 import androidx.ui.foundation.HorizontalScroller
 import androidx.ui.foundation.VerticalScroller
-import androidx.ui.graphics.Image
-import androidx.ui.graphics.imageFromResource
+import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.layout.*
 import androidx.ui.material.Divider
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.ripple.Ripple
 import androidx.ui.material.withOpacity
-import androidx.ui.res.imageResource
 import androidx.ui.tooling.preview.Preview
+import com.myfirstcomposeapp.data.profile
+import com.myfirstcomposeapp.data.projects
 
 
 @Composable
-fun HomeScreen(openDrawer: () -> Unit) {
+fun HomeScreen() {
     Column {
         TopAppBar(
-            title = { Text(text = "Shivam Yadav") },
-            navigationIcon = {
-                /*VectorImageButton(R.drawable.ic_jetnews_logo) {
-                    openDrawer()
-                }*/
-            }
+            title = { Text(text = "Shivam Yadav") }
         )
         VerticalScroller(modifier = Flexible(1f)) {
             Column {
                 HomeScreenTopSection()
                 HomeScreenSimpleSection()
-                HomeScreenPopularSection()
+                Projects()
                 HomeScreenHistorySection()
             }
         }
@@ -65,7 +60,7 @@ private fun HomeScreenTopSection() {
 
     Text(
         modifier = Spacing(top = 16.dp, left = 16.dp, right = 16.dp),
-        text = "Top stories for you",
+        text = "This is the top section.",
         style = ((+MaterialTheme.typography()).subtitle1).withOpacity(0.87f)
     )
     Ripple(bounded = true) {
@@ -80,25 +75,31 @@ private fun HomeScreenTopSection() {
 
 @Composable
 private fun HomeScreenSimpleSection() {
+    profile.image?.let { image ->
+        Container(modifier = MinHeight(180.dp) wraps ExpandedWidth) {
+            Clip(shape = RoundedCornerShape(4.dp)) {
+                DrawImage(image)
+            }
+        }
+        HeightSpacer(height = 16.dp)
+    }
 
 }
 
 @Composable
-private fun HomeScreenPopularSection() {
+private fun Projects() {
     Text(
         modifier = Spacing(16.dp),
-        text = "Popular on Jetnews",
+        text = "Projects",
         style = ((+MaterialTheme.typography()).subtitle1).withOpacity(0.87f)
     )
 
-    val image = imageFromResource(res = Resources.getSystem())
-    Container( Size(40.dp, 40.dp)) {
-        DrawImage(image)
-    }
-
     HorizontalScroller {
         Row(modifier = Spacing(bottom = 16.dp, right = 16.dp)) {
-
+            projects.forEach{ project ->
+                WidthSpacer(width = 16.dp)
+                ProjectCard(project = project)
+            }
         }
     }
     HomeScreenDivider()
@@ -119,5 +120,5 @@ private fun HomeScreenDivider() {
 @Preview
 @Composable
 fun preview() {
-    HomeScreen {}
+    HomeScreen ()
 }
